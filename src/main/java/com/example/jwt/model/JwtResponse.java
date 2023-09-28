@@ -8,9 +8,11 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @ToString
+
 public class JwtResponse {
 
     private String jwtToken;
     private String username;
+    private String userId;
 
 }

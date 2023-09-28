@@ -40,7 +40,7 @@ public class User implements UserDetails
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-
+    @Column(unique = true)
     private String userName;
     @NaturalId(mutable = true)
     private String email;

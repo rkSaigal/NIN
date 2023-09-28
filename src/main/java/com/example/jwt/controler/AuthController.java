@@ -4,6 +4,7 @@ package com.example.jwt.controler;
 import com.example.jwt.entities.User;
 import com.example.jwt.model.JwtRequest;
 import com.example.jwt.model.JwtResponse;
+import com.example.jwt.repository.UserRepository;
 import com.example.jwt.security.JwtHelper;
 import com.example.jwt.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,6 +42,9 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userDao;
+
 
     private Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -51,8 +57,15 @@ public class AuthController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         String token = this.helper.generateToken(userDetails);
 
+      Optional<User> user = userDao.findByEmail(request.getEmail());
+
+      User usr = user.get();
+
+
+
         JwtResponse response = JwtResponse.builder()
                 .jwtToken(token)
+                .userId(usr.getUserId().toString())
                 .username(userDetails.getUsername()).build();
         return new ResponseEntity<>(response, HttpStatus.OK);
 
